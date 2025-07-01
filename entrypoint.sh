@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# If environment variables are set, write them into /config/config.json
+# If env-vars set, write config.json into /config
 if [ -n "${RUFNUMMER}" ] || [ -n "${PASSWORT}" ]; then
   cat > /config/config.json <<EOF
 {
@@ -18,8 +18,8 @@ if [ -n "${RUFNUMMER}" ] || [ -n "${PASSWORT}" ]; then
 EOF
 fi
 
-# Symlink or copy the config into the app folder
+# Link config into the app folder
 ln -sf /config/config.json /opt/at-extender/config.json
 
-# Exec your bot (so signals are forwarded correctly)
+# Launch the bot
 exec python /opt/at-extender/at-extender.py

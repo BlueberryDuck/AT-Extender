@@ -1,24 +1,19 @@
-FROM python:3.9-slim
-
-# 1. Install system deps & Playwright
-RUN apt-get update && apt-get install -y --no-install-recommends \
-      curl ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
+# Use a specific Playwright Python image (Ubuntu 22.04 “jammy”) 
+FROM mcr.microsoft.com/playwright/python:v1.53.0-jammy
 
 WORKDIR /opt/at-extender
 
-# 2. Python deps
+# 1) Install any extra Python deps
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt \
-    && playwright install
+RUN pip install --no-cache-dir -r requirements.txt
 
-# 3. Copy application code into the image
+# 2) Copy application code into the image
 COPY . /opt/at-extender
 
-# 4. Declare a mount point for config.json
+# 3) Declare a mount point for config.json
 VOLUME ["/config"]
 
-# 5. Entrypoint script
+# 4) Entrypoint script
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
